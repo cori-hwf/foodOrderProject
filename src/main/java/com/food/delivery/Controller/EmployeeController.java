@@ -41,11 +41,10 @@ public class EmployeeController {
     return Result.success(emp);
   }
 
-    @PostMapping("logout")
-    public Result<String> logout(HttpServletRequest request){
-        //clear the attribute from the session
-        request.removeAttribute("currEmployee");
-
-        return Result.success("Logout successfully.");
-    }
+  @PostMapping("logout")
+  public Result<String> logout(HttpServletRequest request) {
+    // clear the attribute from the session
+    request.removeAttribute("currEmployee");
+    return Result.success("Logout successfully.");
+  }
 }
