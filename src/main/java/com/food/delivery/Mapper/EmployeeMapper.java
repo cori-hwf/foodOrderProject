@@ -1,11 +1,8 @@
 package com.food.delivery.Mapper;
 
-import org.apache.ibatis.annotations.Mapper;
-
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.food.delivery.Entity.Employee;
+import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
-public interface EmployeeMapper extends BaseMapper<Employee> {
-    
-}
+public interface EmployeeMapper extends BaseMapper<Employee> {}
