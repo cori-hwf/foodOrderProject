@@ -1,0 +1,27 @@
+# tomcat port number config
+server:
+    port: 8080
+
+# config the name of the project
+spring:
+    application:
+        name: foodDeliveryProject
+# config druid and postgres
+    datasource:
+      druid:
+        driver-class-name: org.postgresql.Driver
+        url: jdbc:postgresql://localhost:5432/foodDelivery
+        username: postgres
+        password: postgres
+
+
+
+mybatis-plus:
+  configuration:
+    #在映射实体或者属性时，将数据库中表名和字段名中的下划线去掉，开启按照驼峰命名法映射
+    # address_book(表名) -> addressBook（类名）
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    db-config:
+      id-type: ASSIGN_ID
