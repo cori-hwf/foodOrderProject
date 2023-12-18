@@ -21,7 +21,7 @@
         <div class="tableBar">
           <el-input
             v-model="input"
-            placeholder="请输入员工姓名"
+            placeholder="Enter employee's name"
             style="width: 250px"
             clearable
             @keyup.enter.native="handleQuery"
@@ -34,7 +34,7 @@
             ></i>
           </el-input>
           <el-button type="primary" @click="addMemberHandle('add')">
-            + 添加员工
+            + add Employee
           </el-button>
         </div>
         <el-table :data="tableData" stripe class="tableBox">

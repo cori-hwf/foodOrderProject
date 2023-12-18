@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.food.delivery.Entity.Employee;
 import com.food.delivery.Helper.Result;
 import com.food.delivery.Service.EmployeeService;
+import java.time.LocalDateTime;
 import javax.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,5 +47,33 @@ public class EmployeeController {
     // clear the attribute from the session
     request.getSession().removeAttribute("currEmployee");
     return Result.success("Logout successfully.");
+  }
+
+  @PostMapping
+  public Result<String> addEmployee(HttpServletRequest request, @RequestBody Employee employee) {
+
+    // set time
+    LocalDateTime currTime = LocalDateTime.now();
+    employee.setCreateTime(currTime);
+    employee.setUpdateTime(currTime);
+
+    // set default password
+    String encryptedPassword = employee.decryptPassword("1234567");
+    employee.setPassword(encryptedPassword);
+
+    // set users
+    Long currEmployee =
+        (Long)
+            request
+                .getSession()
+                .getAttribute("currEmployee"); // getAttribute will return an Object type
+    employee.setCreateUser(currEmployee);
+    employee.setUpdateUser(currEmployee);
+
+    // no need to set default status as it is handled by the db
+
+    employeeService.save(employee);
+
+    return Result.success("employee successfully added");
   }
 }
