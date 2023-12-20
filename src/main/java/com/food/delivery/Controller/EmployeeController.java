@@ -1,16 +1,20 @@
 package com.food.delivery.Controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.food.delivery.Entity.Employee;
 import com.food.delivery.Helper.Result;
 import com.food.delivery.Service.EmployeeService;
 import java.time.LocalDateTime;
 import javax.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
@@ -75,5 +79,31 @@ public class EmployeeController {
     employeeService.save(employee);
 
     return Result.success("employee successfully added");
+  }
+
+  @GetMapping("/page")
+  public Result<Page> listEmployee(
+      @RequestParam int page, @RequestParam int pageSize, String name) {
+
+    // 构建分页构造器
+    Page pageInfo = new Page(page, pageSize);
+
+    // 构建条件构造器
+    LambdaQueryWrapper<Employee> queryWrapper = new LambdaQueryWrapper<>();
+    // 添加过滤条件
+    queryWrapper.like(
+        StringUtils.isNotEmpty(name),
+        Employee::getName,
+        name); // the first boolean value is true -> add the condition to the query, else nothing
+    // happen
+
+    queryWrapper.orderByDesc(Employee::getUpdateTime);
+
+    // 执行查询
+    employeeService.page(
+        pageInfo,
+        queryWrapper); // need not return anything, it will save the queried result in the pageInfo
+
+    return Result.success(pageInfo);
   }
 }
