@@ -12,6 +12,7 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -105,5 +106,21 @@ public class EmployeeController {
         queryWrapper); // need not return anything, it will save the queried result in the pageInfo
 
     return Result.success(pageInfo);
+  }
+
+  // this function is generalized to be used for any updates towards employee
+  @PutMapping
+  public Result<String> updateEmployee(HttpServletRequest request, @RequestBody Employee employee) {
+
+    Long currUserId = (Long) request.getSession().getAttribute("currEmployee");
+    employee.setUpdateTime(LocalDateTime.now());
+    employee.setUpdateUser(currUserId);
+
+    // LambdaQueryWrapper<Employee> queryWrapper = new LambdaQueryWrapper<>();
+    // queryWrapper.eq(Employee::getId, employee.getId());
+    // employeeService.update(employee, queryWrapper);
+    // easier way to update
+    employeeService.updateById(employee);
+    return Result.success("Employee updated successfully.");
   }
 }
