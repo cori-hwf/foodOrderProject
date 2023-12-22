@@ -1,6 +1,7 @@
 package com.food.delivery.Filter;
 
 import com.alibaba.fastjson.JSON;
+import com.food.delivery.Helper.BaseContext;
 import com.food.delivery.Helper.Result;
 import java.io.IOException;
 import javax.servlet.Filter;
@@ -44,9 +45,12 @@ public class LoginCheckFilter implements Filter {
 
     // else we need to check if the user has already logged in
     if (httpRequest.getSession().getAttribute("currEmployee") != null) {
-      log.info(
-          "it is currently logged in with employeeId {}",
-          httpRequest.getSession().getAttribute("currEmployee"));
+
+      Long currLoginedUser = (Long) httpRequest.getSession().getAttribute("currEmployee");
+      BaseContext.setCurrentId(currLoginedUser); // store the id as thread variable
+
+      log.info("it is currently logged in with employeeId {}", currLoginedUser);
+
       chain.doFilter(httpRequest, httpResponse);
       return;
     }

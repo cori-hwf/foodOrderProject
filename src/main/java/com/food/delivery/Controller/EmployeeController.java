@@ -5,12 +5,12 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.food.delivery.Entity.Employee;
 import com.food.delivery.Helper.Result;
 import com.food.delivery.Service.EmployeeService;
-import java.time.LocalDateTime;
 import javax.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -56,27 +56,27 @@ public class EmployeeController {
 
   @PostMapping
   public Result<String> addEmployee(HttpServletRequest request, @RequestBody Employee employee) {
-
+    // Since time and user setting are common fields, we let Basecontext and MetaObjectHandler to
+    // handle to remove repetitive codes
     // set time
-    LocalDateTime currTime = LocalDateTime.now();
-    employee.setCreateTime(currTime);
-    employee.setUpdateTime(currTime);
+    // LocalDateTime currTime = LocalDateTime.now();
+    // employee.setCreateTime(currTime);
+    // employee.setUpdateTime(currTime);
+
+    // set users
+    // Long currEmployee =
+    //     (Long)
+    //         request
+    //             .getSession()
+    //             .getAttribute("currEmployee"); // getAttribute will return an Object type
+    // employee.setCreateUser(currEmployee);
+    // employee.setUpdateUser(currEmployee);
 
     // set default password
     String encryptedPassword = employee.decryptPassword("1234567");
     employee.setPassword(encryptedPassword);
 
-    // set users
-    Long currEmployee =
-        (Long)
-            request
-                .getSession()
-                .getAttribute("currEmployee"); // getAttribute will return an Object type
-    employee.setCreateUser(currEmployee);
-    employee.setUpdateUser(currEmployee);
-
     // no need to set default status as it is handled by the db
-
     employeeService.save(employee);
 
     return Result.success("employee successfully added");
@@ -112,9 +112,11 @@ public class EmployeeController {
   @PutMapping
   public Result<String> updateEmployee(HttpServletRequest request, @RequestBody Employee employee) {
 
-    Long currUserId = (Long) request.getSession().getAttribute("currEmployee");
-    employee.setUpdateTime(LocalDateTime.now());
-    employee.setUpdateUser(currUserId);
+    // these common fields are handled by MetaObjectHandler
+    // log.info(employee.toString());
+    // Long currUserId = (Long) request.getSession().getAttribute("currEmployee");
+    // employee.setUpdateTime(LocalDateTime.now());
+    // employee.setUpdateUser(currUserId);
 
     // LambdaQueryWrapper<Employee> queryWrapper = new LambdaQueryWrapper<>();
     // queryWrapper.eq(Employee::getId, employee.getId());
@@ -122,5 +124,12 @@ public class EmployeeController {
     // easier way to update
     employeeService.updateById(employee);
     return Result.success("Employee updated successfully.");
+  }
+
+  @GetMapping("/{id}")
+  public Result<Employee> getEmployeeById(@PathVariable Long id) {
+    Employee empInfo = employeeService.getById(id);
+    if (empInfo == null) return Result.error("The employee can not found");
+    return Result.success(empInfo);
   }
 }
