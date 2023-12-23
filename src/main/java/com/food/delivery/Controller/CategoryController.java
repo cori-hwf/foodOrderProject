@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -44,5 +45,12 @@ public class CategoryController {
   public Result<String> deleteCategory(@RequestParam Long ids) {
     categoryService.remove(ids);
     return Result.success("The category is deleted successfully.");
+  }
+
+  @PutMapping
+  public Result<String> editCategory(@RequestBody Category updatedCategory) {
+    log.info(updatedCategory.toString());
+    categoryService.updateById(updatedCategory);
+    return Result.success("The category is updated successfully");
   }
 }
