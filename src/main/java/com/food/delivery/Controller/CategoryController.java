@@ -7,6 +7,7 @@ import com.food.delivery.Helper.Result;
 import com.food.delivery.Service.CategoryService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,7 +28,7 @@ public class CategoryController {
   }
 
   @GetMapping("/page")
-  public Result<Page> getMethodName(
+  public Result<Page> getCategoryPage(
       @RequestParam(required = true) int page, @RequestParam(required = true) int pageSize) {
     Page<Category> pageInfo = new Page(page, pageSize);
 
@@ -37,5 +38,11 @@ public class CategoryController {
     categoryService.page(pageInfo, queryWrapper);
     log.info(pageInfo.toString());
     return Result.success(pageInfo);
+  }
+
+  @DeleteMapping
+  public Result<String> deleteCategory(@RequestParam Long ids) {
+    categoryService.remove(ids);
+    return Result.success("The category is deleted successfully.");
   }
 }
