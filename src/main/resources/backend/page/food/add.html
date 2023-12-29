@@ -58,17 +58,17 @@
           class="demo-ruleForm"
         >
           <div>
-            <el-form-item label="菜品名称:" prop="name">
+            <el-form-item label="Dish name:" prop="name">
               <el-input
                 v-model="ruleForm.name"
-                placeholder="请填写菜品名称"
+                placeholder="Enter dish name"
                 maxlength="20"
               />
             </el-form-item>
-            <el-form-item label="菜品分类:" prop="categoryId">
+            <el-form-item label="Dish category:" prop="categoryId">
               <el-select
                 v-model="ruleForm.categoryId"
-                placeholder="请选择菜品分类"
+                placeholder="Select dish category"
               >
                 <el-option
                   v-for="(item,index) in dishList"
@@ -80,11 +80,11 @@
             </el-form-item>
           </div>
           <div>
-            <el-form-item label="菜品价格:" prop="price">
-              <el-input v-model="ruleForm.price" placeholder="请设置菜品价格" />
+            <el-form-item label="Price:" prop="price">
+              <el-input v-model="ruleForm.price" placeholder="Set dish price" />
             </el-form-item>
           </div>
-          <el-form-item label="口味做法配置:">
+          <el-form-item label="Favor setting:">
             <el-form-item>
               <div class="flavorBox">
                 <span
@@ -92,12 +92,12 @@
                   class="addBut"
                   @click="addFlavore"
                 >
-                  + 添加口味</span
+                  + Add favor</span
                 >
                 <div v-if="dishFlavors.length != 0" class="flavor">
                   <div class="title">
-                    <span>口味名（3个字内）</span
-                    ><span>口味标签（输入标签回车添加）</span>
+                    <span>Favor tag</span>
+                    <!-- <span>口味标签（输入标签回车添加）</span> -->
                   </div>
                   <div class="cont">
                     <div
@@ -118,7 +118,7 @@
                               v-model="item.name"
                               type="text"
                               style="width: 100%"
-                              placeholder="请输入口味"
+                              placeholder="Enter favor"
                               @focus="selectFlavor(true,index)"
                               @blur="outSelect(false,index)"
                               @input="inputHandle(index)"
@@ -154,18 +154,18 @@
                       <span
                         class="delFlavor delBut non"
                         @click="delFlavor(index)"
-                        >删除</span
+                        >Delete</span
                       >
                     </div>
                   </div>
-                  <div class="addBut" @click="addFlavore">添加口味</div>
+                  <div class="addBut" @click="addFlavore">Add favor</div>
                 </div>
               </div>
             </el-form-item>
           </el-form-item>
           <div></div>
           <div>
-            <el-form-item label="菜品图片:" prop="region" class="uploadImg">
+            <el-form-item label="Dish photo:" prop="region" class="uploadImg">
               <el-upload
                 class="avatar-uploader"
                 action="/common/upload"
@@ -180,21 +180,21 @@
             </el-form-item>
           </div>
           <div class="address">
-            <el-form-item label="菜品描述:" prop="region">
+            <el-form-item label="Dish description:" prop="region">
               <el-input
                 v-model="ruleForm.description"
                 type="textarea"
                 :rows="3"
-                placeholder="菜品描述，最长200字"
+                placeholder="Maximum 200 characters for dish description"
                 maxlength="200"
               />
             </el-form-item>
           </div>
           <div class="subBox address">
             <el-form-item>
-              <el-button @click="goBack()"> 取消 </el-button>
+              <el-button @click="goBack()"> Cancel </el-button>
               <el-button type="primary" @click="submitForm('ruleForm')">
-                保存
+                Save
               </el-button>
               <el-button
                 v-if="actionType == 'add'"
@@ -202,7 +202,7 @@
                 class="continue"
                 @click="submitForm('ruleForm','goAnd')"
               >
-                保存并继续添加菜品
+                Save and continue adding
               </el-button>
             </el-form-item>
           </div>
@@ -254,12 +254,16 @@
           rules() {
             return {
               name: [
-                { required: true, message: "请填写菜品名称", trigger: "blur" },
+                {
+                  required: true,
+                  message: "Please enter dish name",
+                  trigger: "blur",
+                },
               ],
               categoryId: [
                 {
                   required: true,
-                  message: "请选择菜品分类",
+                  message: "Please select dish category",
                   trigger: "change",
                 },
               ],
@@ -269,19 +273,21 @@
                   // 'message': '请填写菜品价格',
                   validator: (rules, value, callback) => {
                     if (!value) {
-                      callback(new Error("请填写菜品价格"));
+                      callback(new Error("Please enter dish price"));
                     } else {
                       const reg = /^\d+(\.\d{0,2})?$/;
                       if (reg.test(value)) {
                         if (value < 10000) {
                           callback();
                         } else {
-                          callback(new Error("菜品价格小于10000"));
+                          callback(
+                            new Error("Dish shall not cost more than 10000"),
+                          );
                         }
                       } else {
                         callback(
                           new Error(
-                            "菜品价格格式只能为数字,且最多保留两位小数",
+                            "Dish price is a number with maximum 2 decimals",
                           ),
                         );
                       }
@@ -380,13 +386,22 @@
           getFlavorListHand() {
             // flavor flavorData
             this.dishFlavorsData = [
-              { name: "甜味", value: ["无糖", "少糖", "半糖", "多糖", "全糖"] },
-              { name: "温度", value: ["热饮", "常温", "去冰", "少冰", "多冰"] },
+              { name: "Sweetness", value: ["0%", "25%", "50%", "75%", "100%"] },
               {
-                name: "忌口",
-                value: ["不要葱", "不要蒜", "不要香菜", "不要辣"],
+                name: "Ice level",
+                value: [
+                  "hot",
+                  "room temperature",
+                  "no ice",
+                  "less ice",
+                  "more ice",
+                ],
               },
-              { name: "辣度", value: ["不辣", "微辣", "中辣", "重辣"] },
+              {
+                name: "To avoid",
+                value: ["spicy", "garlic", "coriander", "spring onion"],
+              },
+              { name: "Spiciness", value: ["0%", "25%", "50%", "75%", "100%"] },
             ];
           },
 
@@ -440,7 +455,7 @@
                 }));
                 delete params.dishFlavors;
                 if (!this.imageUrl) {
-                  this.$message.error("请上传菜品图片");
+                  this.$message.error("Please upload dish photo");
                   return;
                 }
                 if (this.actionType == "add") {

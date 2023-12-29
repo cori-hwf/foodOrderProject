@@ -6,16 +6,15 @@ import java.time.LocalDateTime;
 import lombok.Data;
 
 @Data
-public class Category {
+public class DishFlavor {
 
   private Long id;
-  // 1 -> cuisine category; 2 -> set category
-  private Integer type;
+
+  private Long dishId;
 
   private String name;
 
-  // sort order
-  private Integer sort;
+  private String value;
 
   @TableField(fill = FieldFill.INSERT)
   private LocalDateTime createTime;
@@ -28,4 +27,6 @@ public class Category {
 
   @TableField(fill = FieldFill.INSERT_UPDATE)
   private Long updateUser;
+
+  private Integer isDeleted;
 }
