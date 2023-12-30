@@ -133,7 +133,7 @@
                               >{{ it.name }}</span
                             >
                             <span v-if="dishFlavorsData == []" class="none"
-                              >无数据</span
+                              >No entry</span
                             >
                           </div>
                         </div>
@@ -463,7 +463,7 @@
                   addDish(params)
                     .then((res) => {
                       if (res.code === 1) {
-                        this.$message.success("菜品添加成功！");
+                        this.$message.success("Dish added successfully！");
                         if (!st) {
                           this.goBack();
                         } else {
@@ -487,21 +487,21 @@
                       }
                     })
                     .catch((err) => {
-                      this.$message.error("请求出错了：" + err);
+                      this.$message.error("Error encountered：" + err);
                     });
                 } else {
                   delete params.updateTime;
                   editDish(params)
                     .then((res) => {
                       if (res.code === 1) {
-                        this.$message.success("菜品修改成功！");
+                        this.$message.success("Dish edited successully！");
                         this.goBack();
                       } else {
                         this.$message.error(res.msg || "操作失败");
                       }
                     })
                     .catch((err) => {
-                      this.$message.error("请求出错了：" + err);
+                      this.$message.error("Error encountered：" + err);
                     });
                 }
               } else {
