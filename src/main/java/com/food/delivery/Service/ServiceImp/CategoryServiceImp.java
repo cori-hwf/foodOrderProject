@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.food.delivery.Entity.Category;
 import com.food.delivery.Entity.Dish;
 import com.food.delivery.Entity.Setmeal;
-import com.food.delivery.Helper.CategoryBindException;
+import com.food.delivery.Exception.CategoryBindException;
 import com.food.delivery.Mapper.CategoryMapper;
 import com.food.delivery.Service.CategoryService;
 import com.food.delivery.Service.DishService;

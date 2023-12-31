@@ -7,14 +7,18 @@ import com.food.delivery.Entity.Category;
 import com.food.delivery.Entity.Dish;
 import com.food.delivery.Helper.Result;
 import com.food.delivery.Service.CategoryService;
+import com.food.delivery.Service.DishFlavorService;
 import com.food.delivery.Service.DishService;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -29,6 +33,15 @@ public class DishController {
 
   @Autowired CategoryService categoryService;
 
+  @Autowired DishFlavorService dishFlavorService;
+
+  @GetMapping("/{id}")
+  public Result<DishDto> getCurrDish(@PathVariable Long id) {
+
+    DishDto dishWithFlavor = dishService.getDishWithFlavor(id);
+    return Result.success(dishWithFlavor);
+  }
+
   @GetMapping("/page")
   private Result<Page> getDishPage(
       @RequestParam(required = true) int page,
@@ -42,7 +55,7 @@ public class DishController {
 
     queryWrapper.like(name != null, Dish::getName, name);
 
-    queryWrapper.orderByAsc(Dish::getSort);
+    queryWrapper.orderByAsc(Dish::getSort).orderByDesc(Dish::getUpdateTime);
 
     dishService.page(pageInfo, queryWrapper);
 
@@ -92,5 +105,26 @@ public class DishController {
     dishService.saveWithFlavor(dishWithFlavors);
 
     return Result.success("the dish is saved successfully");
+  }
+
+  @PostMapping("/status/{newStatus}")
+  public Result<String> toggleDishesStatus(@PathVariable int newStatus, @RequestParam String ids) {
+
+    dishService.batchToggleStatus(newStatus, ids);
+
+    return Result.success("Status toggled successfully");
+  }
+
+  @PutMapping
+  public Result<String> updateDish(@RequestBody DishDto dishWithFlavors) {
+    dishService.updateWithFlavor(dishWithFlavors);
+    return Result.success("Dish edited successully");
+  }
+
+  @DeleteMapping
+  public Result<String> deleteDishes(@RequestParam String ids) {
+    dishService.batchDeleteDish(ids);
+
+    return Result.success("Dishes deleted successfully");
   }
 }
