@@ -1,5 +1,6 @@
-package com.food.delivery.Helper;
+package com.food.delivery.Exception;
 
+import com.food.delivery.Helper.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
@@ -25,6 +26,11 @@ public class GlobalExceptionHandler {
 
   @ExceptionHandler(CategoryBindException.class)
   public Result<String> exceptionHandler(CategoryBindException e) {
+    return Result.error(e.getMessage());
+  }
+
+  @ExceptionHandler(DishNotFoundException.class)
+  public Result<String> exceptionHandler(DishNotFoundException e) {
     return Result.error(e.getMessage());
   }
 }
