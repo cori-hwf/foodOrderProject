@@ -99,6 +99,17 @@ public class DishController {
     return Result.success(dishDtoPage);
   }
 
+  @GetMapping("/list")
+  public Result<List<Dish>> getDishbyCategory(@RequestParam Long categoryId) {
+
+    LambdaQueryWrapper<Dish> queryWrapper = new LambdaQueryWrapper<>();
+    queryWrapper.eq(categoryId != null, Dish::getCategoryId, categoryId);
+    queryWrapper.eq(Dish::getStatus, 1); // filter away the disabled ones
+    List<Dish> dishes = dishService.list(queryWrapper);
+
+    return Result.success(dishes);
+  }
+
   @PostMapping
   public Result<String> saveDish(@RequestBody DishDto dishWithFlavors) {
 
