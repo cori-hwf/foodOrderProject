@@ -24,13 +24,8 @@ public class GlobalExceptionHandler {
     return Result.error("Unkown DataIntegrityViolation error");
   }
 
-  @ExceptionHandler(CategoryBindException.class)
-  public Result<String> exceptionHandler(CategoryBindException e) {
-    return Result.error(e.getMessage());
-  }
-
-  @ExceptionHandler(DishNotFoundException.class)
-  public Result<String> exceptionHandler(DishNotFoundException e) {
+  @ExceptionHandler(CustomerizedException.class)
+  public Result<String> exceptionHandler(CustomerizedException e) {
     return Result.error(e.getMessage());
   }
 }
