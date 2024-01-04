@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.food.delivery.DataTransferObject.DishDto;
 import com.food.delivery.Entity.Dish;
 import com.food.delivery.Entity.DishFlavor;
-import com.food.delivery.Exception.DishNotFoundException;
+import com.food.delivery.Exception.CustomerizedException;
 import com.food.delivery.Mapper.DishMapper;
 import com.food.delivery.Service.DishFlavorService;
 import com.food.delivery.Service.DishService;
@@ -49,7 +49,7 @@ public class DishServiceImp extends ServiceImpl<DishMapper, Dish> implements Dis
 
     Dish dish = this.getById(id);
 
-    if (dish == null) throw new DishNotFoundException("Dish can not be found in database");
+    if (dish == null) throw new CustomerizedException("Dish can not be found in database");
 
     LambdaQueryWrapper<DishFlavor> lambdaQueryWrapper = new LambdaQueryWrapper<>();
     lambdaQueryWrapper.eq(DishFlavor::getDishId, id);
@@ -104,7 +104,14 @@ public class DishServiceImp extends ServiceImpl<DishMapper, Dish> implements Dis
     for (String id : splitIds) {
 
       long longId = Long.parseLong(id);
-      ;
+
+      // if status of the Dish is 1 (enabled) -> shall not be deleted
+      Dish currDish = this.getById(longId);
+      log.info("currDish: {} , status equal to 1: {}", currDish, currDish.getStatus() == 1);
+      if (currDish != null && (currDish.getStatus() == 0))
+        throw new CustomerizedException(
+            "At least one of the dish is currently enabled. Disable all dishes before deletion!");
+
       // delete the dish
       this.removeById(longId);
 
