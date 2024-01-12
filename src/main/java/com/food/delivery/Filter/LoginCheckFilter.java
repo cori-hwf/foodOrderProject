@@ -34,7 +34,13 @@ public class LoginCheckFilter implements Filter {
 
     String[] URLs =
         new String[] {
-          "/employee/login", "/employee/logout", "/backend/**", "/frontend/**", "/common/**"
+          "/employee/login",
+          "/employee/logout",
+          "/backend/**",
+          "/frontend/**",
+          "/common/**",
+          "/user/sendMsg",
+          "/user/login"
         }; // list of urls that need not to be checked
 
     // if matched any of the url need not to check
@@ -43,13 +49,25 @@ public class LoginCheckFilter implements Filter {
       return;
     }
 
-    // else we need to check if the user has already logged in
+    // else we need to check if the user for employee system has already logged in
     if (httpRequest.getSession().getAttribute("currEmployee") != null) {
 
       Long currLoginedUser = (Long) httpRequest.getSession().getAttribute("currEmployee");
       BaseContext.setCurrentId(currLoginedUser); // store the id as thread variable
 
       log.info("it is currently logged in with employeeId {}", currLoginedUser);
+
+      chain.doFilter(httpRequest, httpResponse);
+      return;
+    }
+
+    // else we need to check if the user for employee system has already logged in
+    if (httpRequest.getSession().getAttribute("user") != null) {
+
+      Long currLoginedUser = (Long) httpRequest.getSession().getAttribute("user");
+      BaseContext.setCurrentId(currLoginedUser); // store the id as thread variable
+
+      log.info("it is currently logged in with userId {}", currLoginedUser);
 
       chain.doFilter(httpRequest, httpResponse);
       return;
