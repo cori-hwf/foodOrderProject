@@ -14,7 +14,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -73,5 +75,17 @@ public class SetmealController {
     setmealService.saveSetmealWithDishes(setmealDto);
 
     return Result.success("Setmeal added successfully.");
+  }
+
+  @PostMapping("/status/{newStatus}")
+  public Result<String> toggleStatus(@PathVariable int newStatus, @RequestParam List<Long> ids) {
+    setmealService.toggleStatus(newStatus, ids);
+    return Result.success("Setmeal status toggled successfully");
+  }
+
+  @DeleteMapping
+  public Result<String> deleteSetmeals(@RequestParam List<Long> ids) {
+    setmealService.batchDeleteSetmeals(ids);
+    return Result.success("Setmeals deleted successfully");
   }
 }
