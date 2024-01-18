@@ -24,7 +24,7 @@
     <div id="address" class="app">
       <div class="divHead">
         <div class="divTitle">
-          <i class="el-icon-arrow-left" @click="goBack"></i>地址管理
+          <i class="el-icon-arrow-left" @click="goBack"></i>Address management
         </div>
       </div>
       <div class="divContent">
@@ -43,7 +43,7 @@
           </div>
           <div class="divUserPhone">
             <span>{{item.consignee}}</span>
-            <span>{{item.sex === '0' ? '女士' : '先生'}}</span>
+            <span>{{item.sex === '0' ? 'Miss' : 'Mr'}}</span>
             <span>{{item.phone}}</span>
           </div>
           <img
@@ -60,11 +60,11 @@
               src="./../images/checked_false.png"
               @click.stop.prevent="setDefaultAddress(item)"
               v-else
-            />设为默认地址
+            />Set as default address
           </div>
         </div>
       </div>
-      <div class="divBottom" @click="toAddressCreatePage">+ 添加收货地址</div>
+      <div class="divBottom" @click="toAddressCreatePage">+ Add address</div>
     </div>
     <!-- 开发环境版本,包含了有帮助的命令行警告 -->
     <script src="../../backend/plugins/vue/vue.js"></script>
@@ -81,50 +81,7 @@
         el: "#address",
         data() {
           return {
-            addressList: [
-              //     {
-              //     label:'公司',
-              //     detail:'金燕龙写字楼 4层电梯口fsdfdsfsdfsdfsssssssssssss（电梯可…）',
-              //     consignee:'周先生',//姓名
-              //     phone:18544445566,//手机号
-              //     isDefault:0,//是否是默认
-              // },
-              // {
-              //     label:'家',
-              //     detail:'金燕龙写字楼 4层电梯口（电梯可…）',
-              //     consignee:'周先生',//姓名
-              //     phone:18544445566,//手机号
-              //     isDefault:0,//是否是默认
-              // },
-              // {
-              //     label:'学校',
-              //     detail:'金燕龙写字楼 4层电梯口（电梯可…）',
-              //     consignee:'周先生',//姓名
-              //     phone:18544445566,//手机号
-              //     isDefault:0,//是否是默认
-              // },
-              // {
-              //     label:'公司',
-              //     detail:'金燕龙写字楼 4层电梯口（电梯可…）',
-              //     consignee:'周先生',//姓名
-              //     phone:18544445566,//手机号
-              //     isDefault:0,//是否是默认
-              // },
-              // {
-              //     label:'公司',
-              //     detail:'金燕龙写字楼 4层电梯口（电梯可…）',
-              //     consignee:'周先生',//姓名
-              //     phone:18544445566,//手机号
-              //     isDefault:0,//是否是默认
-              // },
-              // {
-              //     label:'公司',
-              //     detail:'金燕龙写字楼 4层电梯口（电梯可…）',
-              //     consignee:'周先生',//姓名
-              //     phone:18544445566,//手机号
-              //     isDefault:1,//是否是默认
-              // }
-            ],
+            addressList: [],
           };
         },
         computed: {},
@@ -138,12 +95,12 @@
           },
           toAddressEditPage(item) {
             window.requestAnimationFrame(() => {
-              window.location.href = `/front/page/address-edit.html?id=${item.id}`;
+              window.location.href = `/frontend/page/address-edit.html?id=${item.id}`;
             });
           },
           toAddressCreatePage() {
             window.requestAnimationFrame(() => {
-              window.location.href = "/front/page/address-edit.html";
+              window.location.href = "/frontend/page/address-edit.html";
             });
           },
           async initData() {

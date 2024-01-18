@@ -173,7 +173,7 @@
               this.getFinishTime();
             } else {
               window.requestAnimationFrame(() => {
-                window.location.href = "/front/page/address-edit.html";
+                window.location.href = "/frontend/page/address-edit.html";
               });
             }
           },
@@ -192,7 +192,7 @@
           },
           toAddressPage() {
             window.requestAnimationFrame(() => {
-              window.location.href = "/front/page/address.html";
+              window.location.href = "/frontend/page/address.html";
             });
           },
           //获取购物车数据
@@ -213,7 +213,7 @@
             const res = await addOrderApi(params);
             if (res.code === 1) {
               window.requestAnimationFrame(() => {
-                window.location.replace("/front/page/pay-success.html");
+                window.location.replace("/frontend/page/pay-success.html");
               });
             } else {
               this.$notify({ type: "warning", message: res.msg });

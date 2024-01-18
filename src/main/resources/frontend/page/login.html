@@ -77,7 +77,7 @@
                         if(res.code === 1){
                             sessionStorage.setItem("userEmail",this.form.email)
                             window.requestAnimationFrame(()=>{
-                                window.location.href= '/front/index.html'
+                                window.location.href= '/frontend/index.html'
                             })                           
                         }else{
                             this.$notify({ type:'warning', message:res.msg});
