@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.food.delivery.DataTransferObject.DishDto;
 import com.food.delivery.Entity.Category;
 import com.food.delivery.Entity.Dish;
+import com.food.delivery.Entity.DishFlavor;
 import com.food.delivery.Helper.Result;
 import com.food.delivery.Service.CategoryService;
 import com.food.delivery.Service.DishFlavorService;
@@ -100,14 +101,40 @@ public class DishController {
   }
 
   @GetMapping("/list")
-  public Result<List<Dish>> getDishbyCategory(@RequestParam Long categoryId) {
-
+  public Result<List<DishDto>> getDishbyCategory(Dish dish) {
+    Long categoryId = dish.getCategoryId();
     LambdaQueryWrapper<Dish> queryWrapper = new LambdaQueryWrapper<>();
     queryWrapper.eq(categoryId != null, Dish::getCategoryId, categoryId);
     queryWrapper.eq(Dish::getStatus, 1); // filter away the disabled ones
     List<Dish> dishes = dishService.list(queryWrapper);
 
-    return Result.success(dishes);
+    List<DishDto> dishDtos =
+        dishes.stream()
+            .map(
+                currDish -> {
+                  // create dishDto object
+                  DishDto dishDto = new DishDto();
+                  BeanUtils.copyProperties(currDish, dishDto);
+
+                  // get flavors for the currDish
+                  Long dishid = dishDto.getId();
+                  LambdaQueryWrapper<DishFlavor> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+                  lambdaQueryWrapper
+                      .eq(dishid != null, DishFlavor::getDishId, dishid)
+                      .eq(DishFlavor::getIsDeleted, 0);
+                  // select * from dishFlavor where dishId = ? and isDeleted = 0
+                  List<DishFlavor> flavors = dishFlavorService.list(lambdaQueryWrapper);
+                  ;
+
+                  // set flavor list to dishDto object
+                  dishDto.setFlavors(flavors);
+
+                  return dishDto;
+                })
+            .collect(Collectors.toList());
+    ;
+
+    return Result.success(dishDtos);
   }
 
   @PostMapping

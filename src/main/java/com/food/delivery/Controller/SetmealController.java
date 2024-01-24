@@ -88,4 +88,16 @@ public class SetmealController {
     setmealService.batchDeleteSetmeals(ids);
     return Result.success("Setmeals deleted successfully");
   }
+
+  @GetMapping("/list")
+  public Result<List<Setmeal>> list(Setmeal setmeal) {
+    Long categoryId = setmeal.getCategoryId();
+    if (categoryId == null) return Result.error("CategoryId not provided");
+
+    LambdaQueryWrapper<Setmeal> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+    lambdaQueryWrapper.eq(Setmeal::getCategoryId, categoryId).eq(Setmeal::getStatus, 1);
+    // select * from setMeal where categoryId = ? and status = 1
+    List<Setmeal> setMeals = setmealService.list(lambdaQueryWrapper);
+    return Result.success(setMeals);
+  }
 }
