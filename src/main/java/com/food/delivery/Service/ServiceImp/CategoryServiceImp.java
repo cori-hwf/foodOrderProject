@@ -27,7 +27,7 @@ public class CategoryServiceImp extends ServiceImpl<CategoryMapper, Category>
     // check if any dish binds with the category
     LambdaQueryWrapper<Dish> queryWrapper = new LambdaQueryWrapper<>();
     queryWrapper.eq(Dish::getCategoryId, id);
-    int countDish = dishService.count(queryWrapper);
+    Integer countDish = dishService.count(queryWrapper);
     if (countDish > 0) {
       throw new CustomerizedException("The category is binded with some dishes");
     } // throw exception}
@@ -35,7 +35,7 @@ public class CategoryServiceImp extends ServiceImpl<CategoryMapper, Category>
     // check if any setmeal binds with the category
     LambdaQueryWrapper<Setmeal> queryWrapper1 = new LambdaQueryWrapper<>();
     queryWrapper1.eq(Setmeal::getCategoryId, id);
-    int countSetmeal = setmealService.count(queryWrapper1);
+    Integer countSetmeal = setmealService.count(queryWrapper1);
     if (countSetmeal > 0) {
       throw new CustomerizedException("The category is binded with some setmeals");
     } // throw exception

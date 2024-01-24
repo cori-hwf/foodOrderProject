@@ -52,7 +52,7 @@ public class SetmealServiceImp extends ServiceImpl<SetmealMapper, Setmeal>
     // count(*) from Setmeal s where s.id in (id1,id2...) and s.status = 1
     queryWrapper.in(Setmeal::getId, ids);
     queryWrapper.eq(Setmeal::getStatus, 1);
-    int count = this.count(queryWrapper);
+    Integer count = this.count(queryWrapper);
 
     if (count > 0) {
       throw new CustomerizedException(

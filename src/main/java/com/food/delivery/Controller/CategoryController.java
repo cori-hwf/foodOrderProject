@@ -43,7 +43,7 @@ public class CategoryController {
   }
 
   @GetMapping("/list")
-  public Result<List<Category>> listCategory(@RequestParam Integer type) {
+  public Result<List<Category>> listCategory(Integer type) {
 
     LambdaQueryWrapper<Category> lambdaQueryWrapper = new LambdaQueryWrapper<>();
     lambdaQueryWrapper.eq(type != null, Category::getType, type);
