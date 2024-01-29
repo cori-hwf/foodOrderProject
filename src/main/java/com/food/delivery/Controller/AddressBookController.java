@@ -60,6 +60,16 @@ public class AddressBookController {
     return Result.error("addressBook can not be found");
   }
 
+  @GetMapping("/default")
+  public Result<AddressBook> get(AddressBook addressBook) {
+    Long userId = BaseContext.getCurrentId();
+    if (userId == null) return Result.error("User not log in");
+    LambdaQueryWrapper<AddressBook> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+    lambdaQueryWrapper.eq(AddressBook::getUserId, userId).eq(AddressBook::getIsDefault, 1);
+    AddressBook one = addresBookService.getOne(lambdaQueryWrapper);
+    return Result.success(one); // if no default address a null object is returned
+  }
+
   @Transactional
   @PutMapping("/default")
   public Result<String> setDefault(@RequestBody AddressBook addressBook) {
