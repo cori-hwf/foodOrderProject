@@ -24,6 +24,8 @@ public class ShoppingCartController {
 
   @GetMapping("list")
   public Result<List<ShoppingCart>> list() {
+    log.info("In shoppingCartController List the threadId is: {}", Thread.currentThread().getId());
+
     Long currentId = BaseContext.getCurrentId();
     LambdaQueryWrapper<ShoppingCart> lambdaQueryWrapper = new LambdaQueryWrapper<>();
     lambdaQueryWrapper

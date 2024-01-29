@@ -30,7 +30,7 @@ public class LoginCheckFilter implements Filter {
 
     String requestURI = httpRequest.getRequestURI();
 
-    // log.info("executed {}",requestURI);
+    log.info("executed {}", requestURI);
 
     String[] URLs =
         new String[] {
@@ -66,6 +66,8 @@ public class LoginCheckFilter implements Filter {
 
       Long currLoginedUser = (Long) httpRequest.getSession().getAttribute("user");
       BaseContext.setCurrentId(currLoginedUser); // store the id as thread variable
+
+      log.info("In filter the threadId is: {}", Thread.currentThread().getId());
 
       log.info("it is currently logged in with userId {}", currLoginedUser);
 

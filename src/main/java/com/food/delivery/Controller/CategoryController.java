@@ -45,6 +45,8 @@ public class CategoryController {
   @GetMapping("/list")
   public Result<List<Category>> listCategory(Integer type) {
 
+    log.info("In categoryController List the threadId is: {}", Thread.currentThread().getId());
+
     LambdaQueryWrapper<Category> lambdaQueryWrapper = new LambdaQueryWrapper<>();
     lambdaQueryWrapper.eq(type != null, Category::getType, type);
     lambdaQueryWrapper.orderByAsc(Category::getSort).orderByDesc(Category::getUpdateTime);
