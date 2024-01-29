@@ -75,4 +75,11 @@ public class UserController {
 
     return Result.error("User log in unsuccessfully");
   }
+
+  @PostMapping("/loginout")
+  public Result<String> logout(HttpSession session) {
+    session.removeAttribute("user");
+
+    return Result.success("Log out successfully");
+  }
 }
