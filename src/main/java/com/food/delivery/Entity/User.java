@@ -1,12 +1,14 @@
 package com.food.delivery.Entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import java.io.Serializable;
 import lombok.Data;
 
 @Data
 @TableName("\"user\"")
-public class User {
+public class User implements Serializable {
 
+  private static final long serialVersionUID = 1L;
   private Long id;
 
   // 姓名
