@@ -1,13 +1,15 @@
 package com.food.delivery.Entity;
 
 import com.baomidou.mybatisplus.annotation.*;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import lombok.Data;
 import org.springframework.util.DigestUtils;
 
 @Data
-public class Employee {
+public class Employee implements Serializable {
 
+  private static final long serialVersionUID = 1L;
   private Long id;
 
   private String name;

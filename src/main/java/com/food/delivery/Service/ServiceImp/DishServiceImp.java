@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +23,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class DishServiceImp extends ServiceImpl<DishMapper, Dish> implements DishService {
 
   @Autowired DishFlavorService dishFlavorService;
+
+  @Autowired RedisTemplate redisTemplate;
 
   @Transactional
   @Override
@@ -92,6 +95,10 @@ public class DishServiceImp extends ServiceImpl<DishMapper, Dish> implements Dis
     String[] splitIds = ids.split(",");
     for (String id : splitIds) {
       Dish currDish = this.getById(Long.parseLong(id));
+      String categoryId = currDish.getCategoryId().toString();
+      if (redisTemplate.hasKey(categoryId)) {
+        redisTemplate.delete(categoryId);
+      } // clear the cache in redis to ensure consistency
       currDish.setStatus(newStatus);
       this.updateById(currDish);
     }
@@ -100,6 +107,7 @@ public class DishServiceImp extends ServiceImpl<DishMapper, Dish> implements Dis
   @Override
   @Transactional
   public void batchDeleteDish(String ids) {
+    String categoryId;
     String[] splitIds = ids.split(",");
     for (String id : splitIds) {
 
@@ -107,13 +115,19 @@ public class DishServiceImp extends ServiceImpl<DishMapper, Dish> implements Dis
 
       // if status of the Dish is 1 (enabled) -> shall not be deleted
       Dish currDish = this.getById(longId);
+      categoryId = currDish.getCategoryId().toString();
       log.info("currDish: {} , status equal to 1: {}", currDish, currDish.getStatus() == 1);
-      if (currDish != null && (currDish.getStatus() == 0))
+      if (currDish != null && (currDish.getStatus() == 1))
         throw new CustomerizedException(
             "At least one of the dish is currently enabled. Disable all dishes before deletion!");
 
       // delete the dish
       this.removeById(longId);
+
+      // clear the cache in redis to ensure consistency
+      if (redisTemplate.hasKey(categoryId)) {
+        redisTemplate.delete(categoryId);
+      } // clear the cache in redis to ensure consistency
 
       // delete the related dish flavors
       LambdaQueryWrapper<DishFlavor> lambdaQueryWrapper = new LambdaQueryWrapper<>();
