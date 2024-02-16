@@ -2,15 +2,13 @@ package com.food.delivery.Entity;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import lombok.Data;
 
 @Data
-public class Setmeal implements Serializable {
+public class Setmeal {
 
-  private static final long serialVersionUID = 1L;
   private Long id;
 
   private Long categoryId;

@@ -11,13 +11,10 @@ import com.food.delivery.Service.CategoryService;
 import com.food.delivery.Service.DishFlavorService;
 import com.food.delivery.Service.DishService;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -38,8 +35,6 @@ public class DishController {
   @Autowired CategoryService categoryService;
 
   @Autowired DishFlavorService dishFlavorService;
-
-  @Autowired RedisTemplate redisTemplate;
 
   @GetMapping("/{id}")
   public Result<DishDto> getCurrDish(@PathVariable Long id) {
@@ -108,25 +103,12 @@ public class DishController {
   @GetMapping("/list")
   public Result<List<DishDto>> getDishbyCategory(Dish dish) {
     Long categoryId = dish.getCategoryId();
-
-    // get dishDto if it exists in Redis
-    ValueOperations opsForValue = redisTemplate.opsForValue();
-
-    String key = categoryId.toString();
-
-    List<DishDto> dishDtos = (List<DishDto>) opsForValue.get(key);
-    if (dishDtos != null) {
-      log.info("key {} found in Redis", key);
-      return Result.success(dishDtos);
-    }
-
-    // else it is currently not cashed in redis, we will get from db and update redis
     LambdaQueryWrapper<Dish> queryWrapper = new LambdaQueryWrapper<>();
     queryWrapper.eq(categoryId != null, Dish::getCategoryId, categoryId);
     queryWrapper.eq(Dish::getStatus, 1); // filter away the disabled ones
     List<Dish> dishes = dishService.list(queryWrapper);
 
-    dishDtos =
+    List<DishDto> dishDtos =
         dishes.stream()
             .map(
                 currDish -> {
@@ -150,7 +132,7 @@ public class DishController {
                   return dishDto;
                 })
             .collect(Collectors.toList());
-    opsForValue.set(key, dishDtos, 60, TimeUnit.MINUTES);
+    ;
 
     return Result.success(dishDtos);
   }
@@ -159,9 +141,6 @@ public class DishController {
   public Result<String> saveDish(@RequestBody DishDto dishWithFlavors) {
 
     dishService.saveWithFlavor(dishWithFlavors);
-
-    String categoryId = dishWithFlavors.getCategoryId().toString();
-    redisTemplate.delete(categoryId); // clear the cache in redis to ensure consistency
 
     return Result.success("the dish is saved successfully");
   }
@@ -177,10 +156,6 @@ public class DishController {
   @PutMapping
   public Result<String> updateDish(@RequestBody DishDto dishWithFlavors) {
     dishService.updateWithFlavor(dishWithFlavors);
-
-    Long categoryId = dishWithFlavors.getCategoryId();
-    redisTemplate.delete(categoryId); // clear the cache in redis to ensure consistency
-
     return Result.success("Dish edited successully");
   }
 

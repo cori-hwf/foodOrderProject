@@ -2,13 +2,12 @@ package com.food.delivery.Entity;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
-import java.io.Serializable;
 import java.time.LocalDateTime;
 import lombok.Data;
 
 @Data
-public class Category implements Serializable {
-  private static final long serialVersionUID = 1L;
+public class Category {
+
   private Long id;
   // 1 -> cuisine category; 2 -> set category
   private Integer type;

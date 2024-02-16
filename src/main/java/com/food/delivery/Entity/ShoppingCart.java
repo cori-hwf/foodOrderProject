@@ -1,14 +1,12 @@
 package com.food.delivery.Entity;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import lombok.Data;
 
 @Data
-public class ShoppingCart implements Serializable {
+public class ShoppingCart {
 
-  private static final long serialVersionUID = 1L;
   private Long id;
 
   private String name;

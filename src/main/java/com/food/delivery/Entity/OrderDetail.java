@@ -1,13 +1,11 @@
 package com.food.delivery.Entity;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 import lombok.Data;
 
 @Data
-public class OrderDetail implements Serializable {
+public class OrderDetail {
 
-  private static final long serialVersionUID = 1L;
   private Long id;
 
   // 名称

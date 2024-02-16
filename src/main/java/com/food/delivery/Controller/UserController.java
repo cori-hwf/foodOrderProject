@@ -7,11 +7,9 @@ import com.food.delivery.Helper.Result;
 import com.food.delivery.Service.EmailService;
 import com.food.delivery.Service.UserService;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 import javax.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,8 +23,6 @@ public class UserController {
   @Autowired private EmailService emailService;
 
   @Autowired private UserService userService;
-
-  @Autowired private RedisTemplate redisTemplate;
 
   @PostMapping("/sendMsg")
   public Result<String> senMsg(@RequestBody User user, HttpSession session) {
@@ -42,10 +38,7 @@ public class UserController {
       emailService.sendSimpleMail(email, "Your Otp to login", "Your Otp to login is " + Otp);
 
       // save the otp to session
-      // session.setAttribute(email, Otp);
-
-      // save the otp to redis for timeLimit of 5 minutes
-      redisTemplate.opsForValue().set(email, Otp, 5, TimeUnit.MINUTES);
+      session.setAttribute(email, Otp);
 
       return Result.success("Message sent successfully");
     }
@@ -61,10 +54,9 @@ public class UserController {
     String otp = map.get("code").toString();
 
     // validate if otp in session with the email and is correct
-    // String otpInSession = session.getAttribute(email).toString();
-    String otpInRedis = redisTemplate.opsForValue().get(email).toString();
+    String otpInSession = session.getAttribute(email).toString();
 
-    if (otpInRedis != null && otpInRedis.equals(otp)) {
+    if (otpInSession != null && otpInSession.equals(otp)) {
       // create the user record in db if user doesn't exist
       LambdaQueryWrapper<User> lambdaQueryWrapper = new LambdaQueryWrapper<>();
       lambdaQueryWrapper.eq(User::getEmail, email);
@@ -78,10 +70,6 @@ public class UserController {
         userService.save(user);
       }
       session.setAttribute("user", user.getId());
-
-      // user successfully logged in hence the otp shall not be valid anymore
-      redisTemplate.delete(email);
-
       return Result.success("User log in successfully");
     }
 
