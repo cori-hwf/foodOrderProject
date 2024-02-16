@@ -14,6 +14,16 @@ spring:
       username: postgres
       password: postgres
 
+  # configure redis
+  redis:
+    host: localhost
+    port: 6379
+    database: 0 #use the database 0
+
+  cache:
+    redis:
+      time-to-live: 180000 #cache will expire in 30 minutes
+
   #config gmail SMTP
   mail:
     host: smtp.gmail.com

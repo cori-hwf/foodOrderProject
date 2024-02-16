@@ -1,5 +1,6 @@
 package com.food.delivery.Helper;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.Data;
@@ -8,7 +9,7 @@ import lombok.Data;
 // All response to the clients' requests will be encapsulated into this class
 
 @Data
-public class Result<T> {
+public class Result<T> implements Serializable {
 
   private Integer code;
 
