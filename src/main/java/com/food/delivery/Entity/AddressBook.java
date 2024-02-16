@@ -2,15 +2,13 @@ package com.food.delivery.Entity;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
-import java.io.Serializable;
 import java.time.LocalDateTime;
 import lombok.Data;
 
 /** 地址簿 */
 @Data
-public class AddressBook implements Serializable {
+public class AddressBook {
 
-  private static final long serialVersionUID = 1L;
   private Long id;
 
   private Long userId;
