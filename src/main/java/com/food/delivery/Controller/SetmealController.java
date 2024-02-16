@@ -14,6 +14,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -70,6 +72,7 @@ public class SetmealController {
   }
 
   @PostMapping
+  @CacheEvict(value = "setmealCache", allEntries = true) // delete all cache under setmealCache
   public Result<String> saveSetmeal(@RequestBody SetmealDto setmealDto) {
 
     setmealService.saveSetmealWithDishes(setmealDto);
@@ -84,12 +87,14 @@ public class SetmealController {
   }
 
   @DeleteMapping
+  @CacheEvict(value = "setmealCache", allEntries = true) // delete all cache under setmealCache
   public Result<String> deleteSetmeals(@RequestParam List<Long> ids) {
     setmealService.batchDeleteSetmeals(ids);
     return Result.success("Setmeals deleted successfully");
   }
 
   @GetMapping("/list")
+  @Cacheable(value = "setmealCache", key = "#setmeal.categoryId")
   public Result<List<Setmeal>> list(Setmeal setmeal) {
     Long categoryId = setmeal.getCategoryId();
     if (categoryId == null) return Result.error("CategoryId not provided");

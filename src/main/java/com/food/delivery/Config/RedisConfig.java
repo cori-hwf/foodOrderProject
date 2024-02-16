@@ -16,6 +16,7 @@ public class RedisConfig extends CachingConfigurerSupport {
     // after se, which is bad for our own checking
     redisTemplate.setKeySerializer(new StringRedisSerializer());
     redisTemplate.setConnectionFactory(connectionFactory);
+    // redisTemplate.setValueSerializer(new GenericJackson2JsonRedisSerializer());
     return redisTemplate;
   }
 }
