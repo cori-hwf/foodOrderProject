@@ -1,4 +1,4 @@
-# Reggie delivery project
+# Food Order project
 This project contains a frontend & backend application for food ordering. The frontend application is meant to be customer-facing for food ordering while the backend application allows admin to manage cuisine, food sets and so on.
 
 ## PostgreSQL setup in docker
